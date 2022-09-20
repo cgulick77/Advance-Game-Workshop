@@ -5,9 +5,11 @@ using UnityEngine;
 public class DroneMove : MonoBehaviour
 {
     public GameObject[] patrolPoints;
-    Vector3 direction;
+    int currentPP = 0;
+   
     public float speed;
-    private int x;
+    public float rSpeed = 10.0f;
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -15,21 +17,24 @@ public class DroneMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
+       if (Vector3.Distance(transform.position, patrolPoints[currentPP].transform.position) < 2)
+       {
+            currentPP++;
+       }
+
+       if (currentPP >= patrolPoints.Length)
+       {
+            currentPP = 0;
+       }
        
-       
+       Quaternion lookatPP = Quaternion.LookRotation(patrolPoints[currentPP].transform.position - transform.position);
+       transform.rotation = Quaternion.Slerp(transform.rotation, lookatPP, rSpeed * Time.deltaTime);
+
+       transform.Translate(0,0,speed * Time.deltaTime);
         
     }
 
-    void MoveToPatrolPoint(int p)
-    {
-        direction = this.transform.position - patrolPoints[p].transform.position;
-        this.transform.LookAt(patrolPoints[p].transform.position);
-        if (direction.magnitude > .3)
-        {
-            Vector3 velocity = direction.normalized * speed * Time.deltaTime;
-            this.transform.position = this.transform.position + velocity;
-        }
-    }
+   
 }
