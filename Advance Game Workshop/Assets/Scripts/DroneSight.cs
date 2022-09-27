@@ -16,11 +16,13 @@ public class DroneSight : MonoBehaviour
         
     }
 
-     void OnCollisionEnter(Collision other) 
+     void OnCollisionEnter(Collision col) 
     {
-        if (other.gameObject.CompareTag("Player"))
+         if (col.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player Spotted");
         }
     }
+
+    
 }
